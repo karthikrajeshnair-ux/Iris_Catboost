@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 import pickle
+import numpy as np
 
 # Load the model
 with open("catboost.pkl", "rb") as f:
@@ -10,7 +11,13 @@ with open("catboost.pkl", "rb") as f:
 label_map = {
     0: "Setosa",
     1: "Versicolor",
-    2: "Virginica"
+    2: "Virginica",
+    "Iris-setosa": "Setosa",
+    "Iris-versicolor": "Versicolor",
+    "Iris-virginica": "Virginica",
+    "setosa": "Setosa",
+    "versicolor": "Versicolor",
+    "virginica": "Virginica"
 }
 
 # App title
@@ -25,8 +32,29 @@ petal_width = st.number_input("Petal Width (cm)", min_value=0.0, max_value=10.0,
 
 # Prediction
 if st.button("Predict"):
-    input_data = pd.DataFrame([[sepal_length, sepal_width, petal_length, petal_width]],
-                              columns=["sepal length (cm)", "sepal width (cm)", "petal length (cm)", "petal width (cm)"])
+    input_data = pd.DataFrame(
+        [[sepal_length, sepal_width, petal_length, petal_width]],
+        columns=[
+            "sepal length (cm)",
+            "sepal width (cm)",
+            "petal length (cm)",
+            "petal width (cm)"
+        ]
+    )
+
     prediction = model.predict(input_data)
-    flower_name = label_map.get(int(prediction[0]), "Unknown")
+
+    # Fix prediction output safely
+    pred = prediction[0]
+
+    if isinstance(pred, np.ndarray):
+        pred = pred[0]
+
+    try:
+        pred_key = int(pred)
+    except:
+        pred_key = str(pred)
+
+    flower_name = label_map.get(pred_key, str(pred_key))
+
     st.success(f"The predicted Iris species is: **{flower_name}**")
