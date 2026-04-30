@@ -1,6 +1,6 @@
 # CatBoost_Iris_ML
 
-App Link :- https://catboost-by-kailash.streamlit.app/
+App Link :- (https://iriscatboost-czkaafmbhb77wkveilm2bd.streamlit.app/)
 
 ## 📌 Key Features
 - ✅ Built with **Streamlit** – easy to use web UI  
